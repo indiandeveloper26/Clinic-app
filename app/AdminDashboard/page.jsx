@@ -90,9 +90,7 @@ export default function AdminDashboard() {
                     ))}
                 </>
             )}
-            <div>
-                <Link href={"/"}>go now</Link>
-            </div>
+
         </div>
     );
 }
