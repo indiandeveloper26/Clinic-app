@@ -1,6 +1,7 @@
 import React from 'react'
-import GoogleLogin from './src/Authentication/google'
-import HomePage from '@/src/componenet/home'
+import GoogleLogin from './Authentication/google'
+import HomePage from './home/page'
+
 
 export default function page() {
   return (
