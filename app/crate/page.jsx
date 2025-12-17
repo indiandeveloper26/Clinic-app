@@ -29,6 +29,11 @@ const getBlockedSlots = (bookedSlots) => {
     return Array.from(blocked);
 };
 
+// Validation helpers
+const isValidName = (name) => /^[a-zA-Z\s]+$/.test(name);
+const isValidPhone = (phone) => /^\d{10,15}$/.test(phone);
+const isValidDescription = (desc) => desc.trim().length >= 3;
+
 export default function AppointmentPage() {
     const { user } = useAuth();
 
@@ -65,16 +70,37 @@ export default function AppointmentPage() {
         e.preventDefault();
         setMessage('');
 
+        // User login check
         if (!user) {
             setMessage('❌ Please login first');
             return;
         }
+
+        // Date/time selected check
         if (!selectedDate || !selectedTime) {
             setMessage('❌ Please select a date and time');
             return;
         }
+
+        // Past time check
         if (isPastSlot(selectedDate, selectedTime)) {
             setMessage('❌ Cannot select a past time slot');
+            return;
+        }
+
+        // Form validation
+        if (!isValidName(form.name)) {
+            setMessage('❌ Name should contain only letters and spaces');
+            return;
+        }
+
+        if (!isValidPhone(form.phone)) {
+            setMessage('❌ Phone number must be 10-15 digits');
+            return;
+        }
+
+        if (!isValidDescription(form.description)) {
+            setMessage('❌ Description must be at least 3 characters');
             return;
         }
 
@@ -111,7 +137,7 @@ export default function AppointmentPage() {
     return (
         <div
             className="min-h-screen flex items-center justify-center p-4"
-            style={{ colorScheme: 'light', backgroundColor: '#f0f4f8' }} // FORCE LIGHT MODE
+            style={{ colorScheme: 'light', backgroundColor: '#f0f4f8' }}
         >
             <div className="bg-white w-full max-w-2xl rounded-2xl shadow-xl p-6">
                 <h1 className="text-3xl font-bold text-center text-blue-700">
@@ -180,30 +206,28 @@ export default function AppointmentPage() {
                             onChange={(e) => setForm({ ...form, name: e.target.value })}
                             required
                             className="w-full border p-2 rounded bg-white text-black"
-                            style={{ colorScheme: 'light' }}
                         />
 
                         <input
                             placeholder="Phone Number"
+                            type="tel"
                             value={form.phone}
                             onChange={(e) => setForm({ ...form, phone: e.target.value })}
                             required
                             className="w-full border p-2 rounded bg-white text-black"
-                            style={{ colorScheme: 'light' }}
                         />
 
-                        <input
+                        <textarea
                             placeholder="Appointment Description"
                             value={form.description}
                             onChange={(e) => setForm({ ...form, description: e.target.value })}
                             required
                             className="w-full border p-2 rounded bg-white text-black"
-                            style={{ colorScheme: 'light' }}
                         />
 
                         <button
                             disabled={loading}
-                            className="w-full bg-blue-600 text-white py-3 rounded-lg"
+                            className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition"
                             style={{ colorScheme: 'light' }}
                         >
                             {loading ? 'Booking...' : 'Confirm 1-Hour Slot'}

@@ -24,7 +24,7 @@ export default function Navbar() {
 
                 {/* Logo */}
                 <Link href="/" className="font-bold text-xl">
-                    🏥  Admya SpeechClinic& Hearing Clinic
+                    🏥  Admya Clinic
 
                 </Link>
 
