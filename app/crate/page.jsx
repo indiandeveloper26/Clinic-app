@@ -41,6 +41,10 @@ const getBlockedSlots = (bookedSlots) => {
 export default function Page() {
     const { user } = useAuth();
 
+    console.log('userdata', user?.displayName
+
+    )
+
     const [selectedDate, setSelectedDate] = useState('');
     const [bookedSlots, setBookedSlots] = useState([]);
     const [selectedTime, setSelectedTime] = useState('');
@@ -94,6 +98,7 @@ export default function Page() {
 
             await addDoc(appointmentsRef, {
                 uid: user.uid,
+                username: user?.displayName,
                 name: form.name,
                 phone: form.phone,
                 description: form.description,

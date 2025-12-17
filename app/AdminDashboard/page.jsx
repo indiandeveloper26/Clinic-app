@@ -1,10 +1,9 @@
-'use client';
+"use client";
 
 import { useEffect, useState } from 'react';
 import { db } from '../firebas/firebasatuh';
 import { collection, getDocs } from 'firebase/firestore';
 import { FaUser, FaCalendarAlt, FaClock, FaInfoCircle, FaEnvelope } from 'react-icons/fa';
-import Link from 'next/link';
 
 export default function AdminDashboard() {
     const [appointments, setAppointments] = useState([]);
@@ -68,29 +67,27 @@ export default function AdminDashboard() {
                                             <th className="py-2 px-4 text-left">Phone</th>
                                             <th className="py-2 px-4 text-left">Description <FaInfoCircle className="inline ml-1" /></th>
                                             <th className="py-2 px-4 text-left">Time <FaClock className="inline ml-1" /></th>
-                                            <th className="py-2 px-4 text-left">User Email <FaEnvelope className="inline ml-1" /></th>
+                                            <th className="py-2 px-4 text-left">Username <FaEnvelope className="inline ml-1" /></th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {appts.map((appt) => (
                                             <tr key={appt.id} className="border-b hover:bg-gray-50 transition">
-                                                <td className="py-2 px-4 font-semibold">{appt.name}</td>
-                                                <td className="py-2 px-4">{appt.phone}</td>
-                                                <td className="py-2 px-4">{appt.description}</td>
-                                                <td className="py-2 px-4">{appt.time}</td>
-                                                <td className="py-2 px-4">{appt.uid || 'N/A'}</td>
+                                                {/* Light/Dark mode text color */}
+                                                <td className="py-2 px-4 font-semibold text-gray-800 dark:text-gray-200">{appt.name}</td>
+                                                <td className="py-2 px-4 text-gray-800 dark:text-gray-200">{appt.phone}</td>
+                                                <td className="py-2 px-4 text-gray-800 dark:text-gray-200">{appt.description}</td>
+                                                <td className="py-2 px-4 text-gray-800 dark:text-gray-200">{appt.time}</td>
+                                                <td className="py-2 px-4 text-gray-800 dark:text-gray-200">{appt.username || 'N/A'}</td>
                                             </tr>
                                         ))}
                                     </tbody>
                                 </table>
                             </div>
-
-
                         </div>
                     ))}
                 </>
             )}
-
         </div>
     );
 }
