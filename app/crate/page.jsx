@@ -9,15 +9,8 @@ import { useAuth } from '../contextapi/cliniccontext';
    TIME SLOTS (1 hour)
 ====================== */
 const TIME_SLOTS = [
-    '09:00',
-    '10:00',
-    '11:00',
-    '12:00',
-    '13:00',
-    '14:00',
-    '15:00',
-    '16:00',
-    '17:00',
+    '09:00', '10:00', '11:00', '12:00',
+    '13:00', '14:00', '15:00', '16:00', '17:00'
 ];
 
 /* ======================
@@ -32,9 +25,7 @@ const isPastSlot = (date, time) => {
 
 const getBlockedSlots = (bookedSlots) => {
     const blocked = new Set();
-    bookedSlots.forEach(({ time }) => {
-        blocked.add(time);
-    });
+    bookedSlots.forEach(({ time }) => blocked.add(time));
     return Array.from(blocked);
 };
 
@@ -78,12 +69,10 @@ export default function AppointmentPage() {
             setMessage('❌ कृपया पहले login करें');
             return;
         }
-
         if (!selectedDate || !selectedTime) {
             setMessage('❌ दिनांक और समय चुनें');
             return;
         }
-
         if (isPastSlot(selectedDate, selectedTime)) {
             setMessage('❌ अतीत का समय चुनना संभव नहीं है');
             return;
@@ -121,8 +110,8 @@ export default function AppointmentPage() {
     ====================== */
     return (
         <div
-            className="min-h-screen bg-[#f0f4f8] flex items-center justify-center p-4"
-            style={{ colorScheme: 'light', backgroundColor: '#f0f4f8' }} // FORCE LIGHT MODE + FIXED BG
+            className="min-h-screen flex items-center justify-center p-4"
+            style={{ colorScheme: 'light', backgroundColor: '#f0f4f8' }} // FORCE LIGHT MODE
         >
             <div className="bg-white w-full max-w-2xl rounded-2xl shadow-xl p-6">
                 <h1 className="text-3xl font-bold text-center text-blue-700">
@@ -141,6 +130,7 @@ export default function AppointmentPage() {
                         value={selectedDate}
                         onChange={(e) => setSelectedDate(e.target.value)}
                         className="w-full border p-3 rounded-lg bg-white text-black"
+                        style={{ colorScheme: 'light' }}
                     />
                 </div>
 
@@ -159,7 +149,7 @@ export default function AppointmentPage() {
                                         disabled={blocked || past}
                                         onClick={() => setSelectedTime(time)}
                                         className={`py-2 rounded-lg text-sm font-medium
-                      ${blocked
+                                            ${blocked
                                                 ? 'bg-red-100 text-red-600'
                                                 : past
                                                     ? 'bg-gray-200 text-gray-500'
@@ -167,7 +157,7 @@ export default function AppointmentPage() {
                                                         ? 'bg-green-600 text-white'
                                                         : 'bg-green-100 hover:bg-green-200'
                                             }`}
-                                        style={{ colorScheme: 'light' }} // FIXED LIGHT MODE FOR BUTTONS
+                                        style={{ colorScheme: 'light' }}
                                     >
                                         {time} {blocked && '❌'} {past && '⏱'}
                                     </button>
@@ -182,6 +172,7 @@ export default function AppointmentPage() {
                     <form
                         onSubmit={handleBooking}
                         className="mt-8 bg-gray-50 p-4 rounded-xl space-y-3"
+                        style={{ colorScheme: 'light' }}
                     >
                         <input
                             placeholder="Patient Name"
@@ -189,6 +180,7 @@ export default function AppointmentPage() {
                             onChange={(e) => setForm({ ...form, name: e.target.value })}
                             required
                             className="w-full border p-2 rounded bg-white text-black"
+                            style={{ colorScheme: 'light' }}
                         />
 
                         <input
@@ -197,6 +189,7 @@ export default function AppointmentPage() {
                             onChange={(e) => setForm({ ...form, phone: e.target.value })}
                             required
                             className="w-full border p-2 rounded bg-white text-black"
+                            style={{ colorScheme: 'light' }}
                         />
 
                         <input
@@ -205,11 +198,13 @@ export default function AppointmentPage() {
                             onChange={(e) => setForm({ ...form, description: e.target.value })}
                             required
                             className="w-full border p-2 rounded bg-white text-black"
+                            style={{ colorScheme: 'light' }}
                         />
 
                         <button
                             disabled={loading}
                             className="w-full bg-blue-600 text-white py-3 rounded-lg"
+                            style={{ colorScheme: 'light' }}
                         >
                             {loading ? 'Booking...' : 'Confirm 1-Hour Slot'}
                         </button>
