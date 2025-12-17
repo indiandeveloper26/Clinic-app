@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useEffect, useState } from 'react';
 import { db } from '../firebas/firebasatuh';
@@ -24,7 +24,7 @@ export default function AdminDashboard() {
             data.sort((a, b) => new Date(`${a.date}T${a.time}`) - new Date(`${b.date}T${b.time}`));
             setAppointments(data);
         } catch (err) {
-            console.error(err);
+            console.error('Error fetching appointments:', err);
         } finally {
             setLoading(false);
         }
@@ -42,11 +42,14 @@ export default function AdminDashboard() {
     }, {});
 
     return (
-        <div className="min-h-screen bg-gray-50 p-6">
+        <div
+            className="min-h-screen p-6"
+            style={{ backgroundColor: '#f0f4f8', colorScheme: 'light' }} // Force light mode
+        >
             <h1 className="text-3xl font-bold text-center mb-6 text-blue-700">🏥 Clinic Dashboard</h1>
 
             {loading ? (
-                <p className="text-center">Loading appointments...</p>
+                <p className="text-center text-gray-700">Loading appointments...</p>
             ) : (
                 <>
                     {Object.keys(groupedByDate).length === 0 && (
@@ -73,12 +76,11 @@ export default function AdminDashboard() {
                                     <tbody>
                                         {appts.map((appt) => (
                                             <tr key={appt.id} className="border-b hover:bg-gray-50 transition">
-                                                {/* Light/Dark mode text color */}
-                                                <td className="py-2 px-4 font-semibold text-gray-800 dark:text-gray-200">{appt.name}</td>
-                                                <td className="py-2 px-4 text-gray-800 dark:text-gray-200">{appt.phone}</td>
-                                                <td className="py-2 px-4 text-gray-800 dark:text-gray-200">{appt.description}</td>
-                                                <td className="py-2 px-4 text-gray-800 dark:text-gray-200">{appt.time}</td>
-                                                <td className="py-2 px-4 text-gray-800 dark:text-gray-200">{appt.username || 'N/A'}</td>
+                                                <td className="py-2 px-4 font-semibold text-gray-800">{appt.name}</td>
+                                                <td className="py-2 px-4 text-gray-800">{appt.phone}</td>
+                                                <td className="py-2 px-4 text-gray-800">{appt.description}</td>
+                                                <td className="py-2 px-4 text-gray-800">{appt.time}</td>
+                                                <td className="py-2 px-4 text-gray-800">{appt.username || 'N/A'}</td>
                                             </tr>
                                         ))}
                                     </tbody>

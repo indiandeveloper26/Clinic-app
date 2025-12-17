@@ -15,7 +15,7 @@ export default function Navbar() {
         { name: 'Home', path: '/' },
         { name: 'Book Appointment', path: '/crate' },
         { name: 'Dashboard', path: '/AdminDashboard' },
-        { name: 'Admin', path: '/admin' },
+
     ];
 
     return (
@@ -24,7 +24,8 @@ export default function Navbar() {
 
                 {/* Logo */}
                 <Link href="/" className="font-bold text-xl">
-                    🏥 ClinicApp
+                    🏥  Admya SpeechClinic& Hearing Clinic
+
                 </Link>
 
                 {/* Desktop Links */}

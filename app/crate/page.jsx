@@ -66,15 +66,15 @@ export default function AppointmentPage() {
         setMessage('');
 
         if (!user) {
-            setMessage('❌ कृपया पहले login करें');
+            setMessage('❌ Please login first');
             return;
         }
         if (!selectedDate || !selectedTime) {
-            setMessage('❌ दिनांक और समय चुनें');
+            setMessage('❌ Please select a date and time');
             return;
         }
         if (isPastSlot(selectedDate, selectedTime)) {
-            setMessage('❌ अतीत का समय चुनना संभव नहीं है');
+            setMessage('❌ Cannot select a past time slot');
             return;
         }
 
@@ -93,13 +93,13 @@ export default function AppointmentPage() {
                 createdAt: new Date(),
             });
 
-            setMessage('✅ अपॉइंटमेंट सफलतापूर्वक बुक हो गया');
+            setMessage('✅ Appointment booked successfully');
             setForm({ name: '', phone: '', description: '' });
             setSelectedTime('');
             fetchBookedSlots(selectedDate);
         } catch (err) {
             console.error(err);
-            setMessage('❌ अपॉइंटमेंट बुक करने में त्रुटि');
+            setMessage('❌ Error booking appointment');
         } finally {
             setLoading(false);
         }
@@ -118,12 +118,12 @@ export default function AppointmentPage() {
                     🏥 Clinic Appointment
                 </h1>
                 <p className="text-center text-gray-700 mt-1 mb-6">
-                    1 घंटे का समय चुनें और विवरण भरें
+                    Select a 1-hour time slot and fill in the details
                 </p>
 
                 {/* Date Picker */}
                 <div className="mb-6">
-                    <label className="font-semibold block mb-1">दिनांक चुनें</label>
+                    <label className="font-semibold block mb-1">Select Date</label>
                     <input
                         type="date"
                         min={new Date().toISOString().split('T')[0]}
@@ -137,7 +137,7 @@ export default function AppointmentPage() {
                 {/* Time Slots */}
                 {selectedDate && (
                     <>
-                        <h2 className="font-semibold mb-2">समय स्लॉट</h2>
+                        <h2 className="font-semibold mb-2">Time Slots</h2>
                         <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
                             {TIME_SLOTS.map((time) => {
                                 const blocked = getBlockedSlots(bookedSlots).includes(time);
