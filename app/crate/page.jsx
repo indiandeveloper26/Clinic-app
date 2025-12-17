@@ -9,15 +9,7 @@ import { useAuth } from '../contextapi/cliniccontext';
    TIME SLOTS (1 hour)
 ====================== */
 const TIME_SLOTS = [
-    '09:00',
-    '10:00',
-    '11:00',
-    '12:00',
-    '13:00',
-    '14:00',
-    '15:00',
-    '16:00',
-    '17:00',
+    '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00',
 ];
 
 /* ======================
@@ -32,18 +24,12 @@ const isPastSlot = (date, time) => {
 
 const getBlockedSlots = (bookedSlots) => {
     const blocked = new Set();
-    bookedSlots.forEach(({ time }) => {
-        blocked.add(time);
-    });
+    bookedSlots.forEach(({ time }) => blocked.add(time));
     return Array.from(blocked);
 };
 
 export default function Page() {
     const { user } = useAuth();
-
-    console.log('userdata', user?.displayName
-
-    )
 
     const [selectedDate, setSelectedDate] = useState('');
     const [bookedSlots, setBookedSlots] = useState([]);
@@ -192,7 +178,7 @@ export default function Page() {
                                 setForm({ ...form, name: e.target.value })
                             }
                             required
-                            className="w-full border p-2 rounded"
+                            className="w-full border p-2 rounded text-gray-800 dark:text-gray-200"
                         />
 
                         <input
@@ -202,7 +188,7 @@ export default function Page() {
                                 setForm({ ...form, phone: e.target.value })
                             }
                             required
-                            className="w-full border p-2 rounded"
+                            className="w-full border p-2 rounded text-gray-800 dark:text-gray-200"
                         />
 
                         <input
@@ -212,7 +198,7 @@ export default function Page() {
                                 setForm({ ...form, description: e.target.value })
                             }
                             required
-                            className="w-full border p-2 rounded"
+                            className="w-full border p-2 rounded text-gray-800 dark:text-gray-200"
                         />
 
                         <button
