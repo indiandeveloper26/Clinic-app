@@ -9,7 +9,15 @@ import { useAuth } from '../contextapi/cliniccontext';
    TIME SLOTS (1 hour)
 ====================== */
 const TIME_SLOTS = [
-    '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00',
+    '09:00',
+    '10:00',
+    '11:00',
+    '12:00',
+    '13:00',
+    '14:00',
+    '15:00',
+    '16:00',
+    '17:00',
 ];
 
 /* ======================
@@ -24,11 +32,13 @@ const isPastSlot = (date, time) => {
 
 const getBlockedSlots = (bookedSlots) => {
     const blocked = new Set();
-    bookedSlots.forEach(({ time }) => blocked.add(time));
+    bookedSlots.forEach(({ time }) => {
+        blocked.add(time);
+    });
     return Array.from(blocked);
 };
 
-export default function Page() {
+export default function AppointmentPage() {
     const { user } = useAuth();
 
     const [selectedDate, setSelectedDate] = useState('');
@@ -65,17 +75,17 @@ export default function Page() {
         setMessage('');
 
         if (!user) {
-            setMessage('❌ Please login first');
+            setMessage('❌ कृपया पहले login करें');
             return;
         }
 
         if (!selectedDate || !selectedTime) {
-            setMessage('❌ Select date & time');
+            setMessage('❌ दिनांक और समय चुनें');
             return;
         }
 
         if (isPastSlot(selectedDate, selectedTime)) {
-            setMessage('❌ Past date/time not allowed');
+            setMessage('❌ अतीत का समय चुनना संभव नहीं है');
             return;
         }
 
@@ -84,7 +94,7 @@ export default function Page() {
 
             await addDoc(appointmentsRef, {
                 uid: user.uid,
-                username: user?.displayName,
+                username: user?.displayName || 'Unknown',
                 name: form.name,
                 phone: form.phone,
                 description: form.description,
@@ -94,13 +104,13 @@ export default function Page() {
                 createdAt: new Date(),
             });
 
-            setMessage('✅ Appointment booked successfully');
+            setMessage('✅ अपॉइंटमेंट सफलतापूर्वक बुक हो गया');
             setForm({ name: '', phone: '', description: '' });
             setSelectedTime('');
             fetchBookedSlots(selectedDate);
         } catch (err) {
             console.error(err);
-            setMessage('❌ Booking failed');
+            setMessage('❌ अपॉइंटमेंट बुक करने में त्रुटि');
         } finally {
             setLoading(false);
         }
@@ -110,31 +120,34 @@ export default function Page() {
        UI
     ====================== */
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 flex items-center justify-center p-4">
+        <div
+            className="min-h-screen bg-[#f0f4f8] flex items-center justify-center p-4"
+            style={{ colorScheme: 'light', backgroundColor: '#f0f4f8' }} // FORCE LIGHT MODE + FIXED BG
+        >
             <div className="bg-white w-full max-w-2xl rounded-2xl shadow-xl p-6">
                 <h1 className="text-3xl font-bold text-center text-blue-700">
                     🏥 Clinic Appointment
                 </h1>
-                <p className="text-center text-gray-500 mt-1 mb-6">
-                    Select 1-hour time slot and describe your appointment
+                <p className="text-center text-gray-700 mt-1 mb-6">
+                    1 घंटे का समय चुनें और विवरण भरें
                 </p>
 
                 {/* Date Picker */}
                 <div className="mb-6">
-                    <label className="font-semibold block mb-1">Select Date</label>
+                    <label className="font-semibold block mb-1">दिनांक चुनें</label>
                     <input
                         type="date"
                         min={new Date().toISOString().split('T')[0]}
                         value={selectedDate}
                         onChange={(e) => setSelectedDate(e.target.value)}
-                        className="w-full border p-3 rounded-lg"
+                        className="w-full border p-3 rounded-lg bg-white text-black"
                     />
                 </div>
 
                 {/* Time Slots */}
                 {selectedDate && (
                     <>
-                        <h2 className="font-semibold mb-2">Time Slots</h2>
+                        <h2 className="font-semibold mb-2">समय स्लॉट</h2>
                         <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
                             {TIME_SLOTS.map((time) => {
                                 const blocked = getBlockedSlots(bookedSlots).includes(time);
@@ -154,10 +167,9 @@ export default function Page() {
                                                         ? 'bg-green-600 text-white'
                                                         : 'bg-green-100 hover:bg-green-200'
                                             }`}
+                                        style={{ colorScheme: 'light' }} // FIXED LIGHT MODE FOR BUTTONS
                                     >
-                                        {time}
-                                        {blocked && ' ❌'}
-                                        {past && ' ⏱'}
+                                        {time} {blocked && '❌'} {past && '⏱'}
                                     </button>
                                 );
                             })}
@@ -174,38 +186,32 @@ export default function Page() {
                         <input
                             placeholder="Patient Name"
                             value={form.name}
-                            onChange={(e) =>
-                                setForm({ ...form, name: e.target.value })
-                            }
+                            onChange={(e) => setForm({ ...form, name: e.target.value })}
                             required
-                            className="w-full border p-2 rounded text-gray-800 dark:text-gray-200"
+                            className="w-full border p-2 rounded bg-white text-black"
                         />
 
                         <input
                             placeholder="Phone Number"
                             value={form.phone}
-                            onChange={(e) =>
-                                setForm({ ...form, phone: e.target.value })
-                            }
+                            onChange={(e) => setForm({ ...form, phone: e.target.value })}
                             required
-                            className="w-full border p-2 rounded text-gray-800 dark:text-gray-200"
+                            className="w-full border p-2 rounded bg-white text-black"
                         />
 
                         <input
                             placeholder="Appointment Description"
                             value={form.description}
-                            onChange={(e) =>
-                                setForm({ ...form, description: e.target.value })
-                            }
+                            onChange={(e) => setForm({ ...form, description: e.target.value })}
                             required
-                            className="w-full border p-2 rounded text-gray-800 dark:text-gray-200"
+                            className="w-full border p-2 rounded bg-white text-black"
                         />
 
                         <button
                             disabled={loading}
                             className="w-full bg-blue-600 text-white py-3 rounded-lg"
                         >
-                            {loading ? 'Booking...' : `Confirm 1-Hour Slot`}
+                            {loading ? 'Booking...' : 'Confirm 1-Hour Slot'}
                         </button>
                     </form>
                 )}
