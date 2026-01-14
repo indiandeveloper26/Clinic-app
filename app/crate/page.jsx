@@ -35,8 +35,7 @@ const isValidPhone = (phone) => /^\d{10,15}$/.test(phone);
 const isValidDescription = (desc) => desc.trim().length >= 3;
 
 export default function AppointmentPage() {
-    const { user } = useAuth();
-
+    const { user, theme } = useAuth();
     const [selectedDate, setSelectedDate] = useState('');
     const [bookedSlots, setBookedSlots] = useState([]);
     const [selectedTime, setSelectedTime] = useState('');
@@ -70,25 +69,21 @@ export default function AppointmentPage() {
         e.preventDefault();
         setMessage('');
 
-        // User login check
         if (!user) {
             setMessage('❌ Please login first');
             return;
         }
 
-        // Date/time selected check
         if (!selectedDate || !selectedTime) {
             setMessage('❌ Please select a date and time');
             return;
         }
 
-        // Past time check
         if (isPastSlot(selectedDate, selectedTime)) {
             setMessage('❌ Cannot select a past time slot');
             return;
         }
 
-        // Form validation
         if (!isValidName(form.name)) {
             setMessage('❌ Name should contain only letters and spaces');
             return;
@@ -106,7 +101,6 @@ export default function AppointmentPage() {
 
         try {
             setLoading(true);
-
             await addDoc(appointmentsRef, {
                 uid: user.uid,
                 username: user?.displayName || 'Unknown',
@@ -118,7 +112,6 @@ export default function AppointmentPage() {
                 duration: 60,
                 createdAt: new Date(),
             });
-
             setMessage('✅ Appointment booked successfully');
             setForm({ name: '', phone: '', description: '' });
             setSelectedTime('');
@@ -132,18 +125,55 @@ export default function AppointmentPage() {
     };
 
     /* ======================
-       UI
+       COLORS BASED ON THEME
     ====================== */
+    const colors = {
+        light: {
+            bg: '#f0f4f8',
+            card: '#ffffff',
+            text: '#1f2937',
+            muted: '#4b5563',
+            blue: '#2563eb',
+            green: '#10b981',
+            red: '#ef4444',
+            slotAvailable: '#d1fae5',
+            slotSelected: '#10b981',
+            slotBlocked: '#fee2e2',
+            slotPast: '#e5e7eb',
+        },
+        dark: {
+            bg: '#1f2937',
+            card: '#374151',
+            text: '#f9fafb',
+            muted: '#d1d5db',
+            blue: '#3b82f6',
+            green: '#34d399',
+            red: '#f87171',
+            slotAvailable: '#065f46',
+            slotSelected: '#10b981',
+            slotBlocked: '#b91c1c',
+            slotPast: '#4b5563',
+        },
+    };
+
+    const themeColors = theme === 'dark' ? colors.dark : colors.light;
+
     return (
         <div
             className="min-h-screen flex items-center justify-center p-4"
-            style={{ colorScheme: 'light', backgroundColor: '#f0f4f8' }}
+            style={{ backgroundColor: themeColors.bg, color: themeColors.text }}
         >
-            <div className="bg-white w-full max-w-2xl rounded-2xl shadow-xl p-6">
-                <h1 className="text-3xl font-bold text-center text-blue-700">
+            <div
+                className="w-full max-w-2xl rounded-2xl shadow-xl p-6"
+                style={{ backgroundColor: themeColors.card }}
+            >
+                <h1
+                    className="text-3xl font-bold text-center mb-1"
+                    style={{ color: themeColors.blue }}
+                >
                     🏥 Clinic Appointment
                 </h1>
-                <p className="text-center text-gray-700 mt-1 mb-6">
+                <p style={{ color: themeColors.muted }} className="text-center mb-6">
                     Select a 1-hour time slot and fill in the details
                 </p>
 
@@ -155,8 +185,12 @@ export default function AppointmentPage() {
                         min={new Date().toISOString().split('T')[0]}
                         value={selectedDate}
                         onChange={(e) => setSelectedDate(e.target.value)}
-                        className="w-full border p-3 rounded-lg bg-white text-black"
-                        style={{ colorScheme: 'light' }}
+                        className="w-full border p-3 rounded-lg"
+                        style={{
+                            backgroundColor: themeColors.card,
+                            color: themeColors.text,
+                            borderColor: themeColors.muted,
+                        }}
                     />
                 </div>
 
@@ -168,22 +202,29 @@ export default function AppointmentPage() {
                             {TIME_SLOTS.map((time) => {
                                 const blocked = getBlockedSlots(bookedSlots).includes(time);
                                 const past = isPastSlot(selectedDate, time);
+                                const selected = selectedTime === time;
+
+                                let bgColor = themeColors.slotAvailable;
+                                let textColor = themeColors.text;
+
+                                if (blocked) {
+                                    bgColor = themeColors.slotBlocked;
+                                    textColor = themeColors.red;
+                                } else if (past) {
+                                    bgColor = themeColors.slotPast;
+                                    textColor = themeColors.muted;
+                                } else if (selected) {
+                                    bgColor = themeColors.slotSelected;
+                                    textColor = '#ffffff';
+                                }
 
                                 return (
                                     <button
                                         key={time}
                                         disabled={blocked || past}
                                         onClick={() => setSelectedTime(time)}
-                                        className={`py-2 rounded-lg text-sm font-medium
-                                            ${blocked
-                                                ? 'bg-red-100 text-red-600'
-                                                : past
-                                                    ? 'bg-gray-200 text-gray-500'
-                                                    : selectedTime === time
-                                                        ? 'bg-green-600 text-white'
-                                                        : 'bg-green-100 hover:bg-green-200'
-                                            }`}
-                                        style={{ colorScheme: 'light' }}
+                                        className="py-2 rounded-lg text-sm font-medium"
+                                        style={{ backgroundColor: bgColor, color: textColor }}
                                     >
                                         {time} {blocked && '❌'} {past && '⏱'}
                                     </button>
@@ -197,15 +238,20 @@ export default function AppointmentPage() {
                 {selectedTime && (
                     <form
                         onSubmit={handleBooking}
-                        className="mt-8 bg-gray-50 p-4 rounded-xl space-y-3"
-                        style={{ colorScheme: 'light' }}
+                        className="mt-8 p-4 rounded-xl space-y-3"
+                        style={{ backgroundColor: themeColors.bg }}
                     >
                         <input
                             placeholder="Patient Name"
                             value={form.name}
                             onChange={(e) => setForm({ ...form, name: e.target.value })}
                             required
-                            className="w-full border p-2 rounded bg-white text-black"
+                            className="w-full border p-2 rounded"
+                            style={{
+                                backgroundColor: themeColors.card,
+                                color: themeColors.text,
+                                borderColor: themeColors.muted,
+                            }}
                         />
 
                         <input
@@ -214,21 +260,36 @@ export default function AppointmentPage() {
                             value={form.phone}
                             onChange={(e) => setForm({ ...form, phone: e.target.value })}
                             required
-                            className="w-full border p-2 rounded bg-white text-black"
+                            className="w-full border p-2 rounded"
+                            style={{
+                                backgroundColor: themeColors.card,
+                                color: themeColors.text,
+                                borderColor: themeColors.muted,
+                            }}
                         />
 
                         <textarea
                             placeholder="Appointment Description"
                             value={form.description}
-                            onChange={(e) => setForm({ ...form, description: e.target.value })}
+                            onChange={(e) =>
+                                setForm({ ...form, description: e.target.value })
+                            }
                             required
-                            className="w-full border p-2 rounded bg-white text-black"
+                            className="w-full border p-2 rounded"
+                            style={{
+                                backgroundColor: themeColors.card,
+                                color: themeColors.text,
+                                borderColor: themeColors.muted,
+                            }}
                         />
 
                         <button
                             disabled={loading}
-                            className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition"
-                            style={{ colorScheme: 'light' }}
+                            className="w-full py-3 rounded-lg transition"
+                            style={{
+                                backgroundColor: themeColors.blue,
+                                color: '#ffffff',
+                            }}
                         >
                             {loading ? 'Booking...' : 'Confirm 1-Hour Slot'}
                         </button>
@@ -236,7 +297,12 @@ export default function AppointmentPage() {
                 )}
 
                 {message && (
-                    <p className="text-center mt-4 font-semibold">{message}</p>
+                    <p
+                        className="text-center mt-4 font-semibold"
+                        style={{ color: themeColors.text }}
+                    >
+                        {message}
+                    </p>
                 )}
             </div>
         </div>

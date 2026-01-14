@@ -4,8 +4,10 @@ import { useEffect, useState } from 'react';
 import { db } from '../firebas/firebasatuh';
 import { collection, getDocs } from 'firebase/firestore';
 import { FaUser, FaCalendarAlt, FaClock, FaInfoCircle, FaEnvelope } from 'react-icons/fa';
+import { useAuth } from '../contextapi/cliniccontext';
 
 export default function AdminDashboard() {
+    const { theme } = useAuth();
     const [appointments, setAppointments] = useState([]);
     const [loading, setLoading] = useState(false);
 
@@ -41,30 +43,75 @@ export default function AdminDashboard() {
         return acc;
     }, {});
 
+    /* ======================
+       THEME COLORS
+    ====================== */
+    const colors = {
+        light: {
+            bg: '#f0f4f8',
+            card: '#ffffff',
+            text: '#1f2937',
+            muted: '#4b5563',
+            blueLight: '#dbeafe',
+            blue: '#2563eb',
+            grayHover: '#f9fafb',
+        },
+        dark: {
+            bg: '#1f2937',
+            card: '#374151',
+            text: '#f9fafb',
+            muted: '#d1d5db',
+            blueLight: '#1e3a8a',
+            blue: '#3b82f6',
+            grayHover: '#4b5563',
+        },
+    };
+
+    const themeColors = theme === 'dark' ? colors.dark : colors.light;
+
     return (
         <div
             className="min-h-screen p-6"
-            style={{ backgroundColor: '#f0f4f8', colorScheme: 'light' }} // Force light mode
+            style={{ backgroundColor: themeColors.bg, color: themeColors.text }}
         >
-            <h1 className="text-3xl font-bold text-center mb-6 text-blue-700">🏥 Clinic Dashboard</h1>
+            <h1
+                className="text-3xl font-bold text-center mb-6"
+                style={{ color: themeColors.blue }}
+            >
+                🏥 Clinic Dashboard
+            </h1>
 
             {loading ? (
-                <p className="text-center text-gray-700">Loading appointments...</p>
+                <p className="text-center" style={{ color: themeColors.muted }}>
+                    Loading appointments...
+                </p>
             ) : (
                 <>
                     {Object.keys(groupedByDate).length === 0 && (
-                        <p className="text-center text-gray-500">No appointments booked yet</p>
+                        <p className="text-center" style={{ color: themeColors.muted }}>
+                            No appointments booked yet
+                        </p>
                     )}
 
                     {Object.entries(groupedByDate).map(([date, appts]) => (
-                        <div key={date} className="mb-8 bg-white rounded-lg shadow-md p-4">
-                            <h2 className="text-xl font-semibold mb-3 flex items-center gap-2 text-blue-600">
-                                <FaCalendarAlt /> {date} ({appts.length} {appts.length > 1 ? 'appointments' : 'appointment'})
+                        <div
+                            key={date}
+                            className="mb-8 rounded-lg shadow-md p-4"
+                            style={{ backgroundColor: themeColors.card }}
+                        >
+                            <h2
+                                className="text-xl font-semibold mb-3 flex items-center gap-2"
+                                style={{ color: themeColors.blue }}
+                            >
+                                <FaCalendarAlt /> {date} ({appts.length}{' '}
+                                {appts.length > 1 ? 'appointments' : 'appointment'})
                             </h2>
 
                             <div className="overflow-x-auto">
-                                <table className="min-w-full bg-white rounded-lg">
-                                    <thead className="bg-blue-100 text-blue-800">
+                                <table className="min-w-full rounded-lg">
+                                    <thead
+                                        style={{ backgroundColor: themeColors.blueLight, color: themeColors.text }}
+                                    >
                                         <tr>
                                             <th className="py-2 px-4 text-left">Patient <FaUser className="inline ml-1" /></th>
                                             <th className="py-2 px-4 text-left">Phone</th>
@@ -75,12 +122,26 @@ export default function AdminDashboard() {
                                     </thead>
                                     <tbody>
                                         {appts.map((appt) => (
-                                            <tr key={appt.id} className="border-b hover:bg-gray-50 transition">
-                                                <td className="py-2 px-4 font-semibold text-gray-800">{appt.name}</td>
-                                                <td className="py-2 px-4 text-gray-800">{appt.phone}</td>
-                                                <td className="py-2 px-4 text-gray-800">{appt.description}</td>
-                                                <td className="py-2 px-4 text-gray-800">{appt.time}</td>
-                                                <td className="py-2 px-4 text-gray-800">{appt.username || 'N/A'}</td>
+                                            <tr
+                                                key={appt.id}
+                                                className="border-b transition hover:bg-gray-100"
+                                                style={{ borderColor: themeColors.muted, backgroundColor: themeColors.card }}
+                                            >
+                                                <td className="py-2 px-4 font-semibold" style={{ color: themeColors.text }}>
+                                                    {appt.name}
+                                                </td>
+                                                <td className="py-2 px-4" style={{ color: themeColors.text }}>
+                                                    {appt.phone}
+                                                </td>
+                                                <td className="py-2 px-4" style={{ color: themeColors.text }}>
+                                                    {appt.description}
+                                                </td>
+                                                <td className="py-2 px-4" style={{ color: themeColors.text }}>
+                                                    {appt.time}
+                                                </td>
+                                                <td className="py-2 px-4" style={{ color: themeColors.text }}>
+                                                    {appt.username || 'N/A'}
+                                                </td>
                                             </tr>
                                         ))}
                                     </tbody>

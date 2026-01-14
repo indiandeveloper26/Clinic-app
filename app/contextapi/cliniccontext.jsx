@@ -12,6 +12,36 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
+
+
+
+
+
+
+    const [theme, setTheme] = useState('light');
+
+    useEffect(() => {
+        // 1️⃣ saved theme
+        const savedTheme = localStorage.getItem('theme');
+
+        // 2️⃣ system theme
+        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+        const finalTheme = savedTheme || (systemDark ? 'dark' : 'light');
+        setTheme(finalTheme);
+        document.documentElement.classList.toggle('dark', finalTheme === 'dark');
+    }, []);
+
+
+    const toggleTheme = () => {
+        setTheme(prev => {
+            const next = prev === 'light' ? 'dark' : 'light';
+            localStorage.setItem('theme', next);
+            document.documentElement.classList.toggle('dark', next === 'dark');
+            return next;
+        });
+    };
+
     // 🔹 Save user to Firestore
     const saveUser = async (user) => {
         await setDoc(
@@ -67,6 +97,8 @@ export const AuthProvider = ({ children }) => {
                 loading,
                 login,
                 logout,
+                theme,
+                toggleTheme
             }}
         >
             {children}

@@ -3,29 +3,35 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '../contextapi/cliniccontext';
-import { FaUserCircle, FaSignOutAlt, FaSignInAlt, FaBars, FaTimes } from 'react-icons/fa';
+import {
+    FaUserCircle,
+    FaSignOutAlt,
+    FaSignInAlt,
+    FaBars,
+    FaTimes,
+    FaMoon,
+    FaSun,
+} from 'react-icons/fa';
 import { useState } from 'react';
 
 export default function Navbar() {
     const pathname = usePathname();
-    const { user, logout, login } = useAuth();
+    const { user, logout, login, theme, toggleTheme } = useAuth();
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     const navLinks = [
         { name: 'Home', path: '/' },
         { name: 'Book Appointment', path: '/crate' },
         { name: 'Dashboard', path: '/AdminDashboard' },
-
     ];
 
     return (
-        <nav className="bg-blue-600 text-white shadow-md sticky top-0 z-50">
+        <nav className="bg-blue-600 dark:bg-gray-900 text-white shadow-md sticky top-0 z-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
 
                 {/* Logo */}
                 <Link href="/" className="font-bold text-xl">
-                    🏥  Admya Clinic
-
+                    🏥 Admya Clinic
                 </Link>
 
                 {/* Desktop Links */}
@@ -35,11 +41,22 @@ export default function Navbar() {
                             key={link.name}
                             href={link.path}
                             className={`px-3 py-2 rounded-md text-sm font-medium transition
-                                ${pathname === link.path ? 'bg-blue-800' : 'hover:bg-blue-500'}`}
+                ${pathname === link.path
+                                    ? 'bg-blue-800 dark:bg-gray-700'
+                                    : 'hover:bg-blue-500 dark:hover:bg-gray-700'}`}
                         >
                             {link.name}
                         </Link>
                     ))}
+
+                    {/* 🌙☀️ Theme Toggle */}
+                    <button
+                        onClick={toggleTheme}
+                        className="p-2 rounded-full bg-blue-700 dark:bg-gray-700 hover:scale-105 transition"
+                        title="Toggle Theme"
+                    >
+                        {theme === 'dark' ? <FaSun /> : <FaMoon />}
+                    </button>
 
                     {user ? (
                         <div className="flex items-center space-x-2">
@@ -63,10 +80,18 @@ export default function Navbar() {
                 </div>
 
                 {/* Mobile Menu Button */}
-                <div className="md:hidden flex items-center">
+                <div className="md:hidden flex items-center space-x-2">
+                    {/* 🌙☀️ Toggle (Mobile Top) */}
+                    <button
+                        onClick={toggleTheme}
+                        className="p-2 rounded-full bg-blue-700 dark:bg-gray-700"
+                    >
+                        {theme === 'dark' ? <FaSun /> : <FaMoon />}
+                    </button>
+
                     <button
                         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                        className="text-white focus:outline-none text-2xl"
+                        className="text-white text-2xl"
                     >
                         {mobileMenuOpen ? <FaTimes /> : <FaBars />}
                     </button>
@@ -75,14 +100,16 @@ export default function Navbar() {
 
             {/* Mobile Menu */}
             {mobileMenuOpen && (
-                <div className="md:hidden bg-blue-500 px-4 pt-2 pb-4 space-y-2">
+                <div className="md:hidden bg-blue-500 dark:bg-gray-800 px-4 pt-2 pb-4 space-y-2">
                     {navLinks.map((link) => (
                         <Link
                             key={link.name}
                             href={link.path}
                             onClick={() => setMobileMenuOpen(false)}
                             className={`block px-3 py-2 rounded-md text-base font-medium transition
-                                ${pathname === link.path ? 'bg-blue-800' : 'hover:bg-blue-600'}`}
+                ${pathname === link.path
+                                    ? 'bg-blue-800 dark:bg-gray-700'
+                                    : 'hover:bg-blue-600 dark:hover:bg-gray-700'}`}
                         >
                             {link.name}
                         </Link>
