@@ -3,6 +3,7 @@ import "./globals.css";
 import { AuthProvider } from "./contextapi/cliniccontext";
 import Navbar from "./navbar/page";
 import { ToastContainer } from "react-toastify";
+import Footer from "./home/footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,6 +31,7 @@ export default function RootLayout({ children }) {
         <AuthProvider>
           <Navbar />
           {children}
+          <Footer />
           <ToastContainer />
 
         </AuthProvider>
