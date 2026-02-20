@@ -215,14 +215,14 @@ export default function HomePage() {
             </section>
 
             {/* ================= FOOTER ================= */}
-            <footer className="bg-white dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 py-12">
+            {/* <footer className="bg-white dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 py-12">
                 <div className="max-w-7xl mx-auto px-6 text-center">
                     <p className="text-slate-500 dark:text-slate-400">
                         © {new Date().getFullYear()} <span className="font-bold text-blue-600">Admya Clinic</span>.
                         Made with care for better health.
                     </p>
                 </div>
-            </footer>
+            </footer> */}
         </div>
     );
 }

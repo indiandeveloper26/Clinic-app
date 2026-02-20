@@ -41,7 +41,7 @@ export default function Footer() {
                         <div className={`text-sm font-medium leading-relaxed max-w-sm uppercase tracking-wider text-[11px] space-y-4 ${isDark ? "opacity-60" : "text-slate-500"}`}>
                             <p className="flex items-start gap-2">
                                 <MapPin size={14} className="text-blue-600 shrink-0 mt-0.5" />
-                                <span>Main Road, Near Ram Ki Paidi, Ayodhya, Uttar Pradesh - 224123</span>
+                                <span>Ayodhya dham road, above R S Dental clinic, Durgapuri Colony, Naka Bypass, Ayodhya, Faizabad, Uttar Pradesh 224001</span>
                             </p>
                             <div className="flex flex-col gap-2">
                                 <span className="flex items-center gap-2">
@@ -64,8 +64,8 @@ export default function Footer() {
                                     key={i}
                                     href={social.href}
                                     className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all hover:-translate-y-1 ${isDark
-                                            ? "bg-slate-800 text-white hover:bg-blue-600"
-                                            : "bg-white shadow-md text-slate-400 hover:bg-blue-600 hover:text-white"
+                                        ? "bg-slate-800 text-white hover:bg-blue-600"
+                                        : "bg-white shadow-md text-slate-400 hover:bg-blue-600 hover:text-white"
                                         }`}
                                 >
                                     <social.Icon size={18} />
@@ -113,8 +113,8 @@ export default function Footer() {
                     {/* Operating Hours Card */}
                     <div className="lg:col-span-4">
                         <div className={`p-8 rounded-[2.5rem] border transition-all ${isDark
-                                ? "bg-slate-900/50 border-slate-800 hover:border-blue-900"
-                                : "bg-white shadow-2xl shadow-blue-500/5 border-slate-100"
+                            ? "bg-slate-900/50 border-slate-800 hover:border-blue-900"
+                            : "bg-white shadow-2xl shadow-blue-500/5 border-slate-100"
                             }`}>
                             <div className="flex items-center gap-3 mb-6">
                                 <Clock className="text-blue-600" size={20} />
